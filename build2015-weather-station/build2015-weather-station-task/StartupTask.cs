@@ -27,10 +27,13 @@ namespace build2015_weather_station_task
 
         // Hard coding guid for sensors. Not an issue for this particular application which is meant for testing and demos
         private List<ConnectTheDotsSensor> sensors = new List<ConnectTheDotsSensor> {
+            //TODO: Replace the GUID's below with your own unique identifiers [HINT: If it is not unique, it will conflict with other devices]
+            //Format for a new sensor is as follows:
+            //new ConnectTheDotsSensor("YOUR_GUID_HERE", "VALUE_DESCRIPTOR", "UNIT_OF_MEASUREMENT");
             new ConnectTheDotsSensor("2298a348-e2f9-4438-ab23-82a3930662ab", "Altitude", "m"),
             new ConnectTheDotsSensor("2298a348-e2f9-4438-ab23-82a3930662ac", "Humidity", "%RH"),
             new ConnectTheDotsSensor("2298a348-e2f9-4438-ab23-82a3930662ad", "Pressure", "kPa"),
-            new ConnectTheDotsSensor("2298a348-e2f9-4438-ab23-82a3930662ae", "Temperature", "C"),
+            //TODO: Add your code here. [HINT: Add another sensor for Temperature with the measurement as Celcius with a unique GUID]
         };
 
         public async void Run(IBackgroundTaskInstance taskInstance)
@@ -42,13 +45,13 @@ namespace build2015_weather_station_task
             mutex = new Mutex(false, mutexId);
 
             // Initialize ConnectTheDots Settings
-            localSettings.ServicebusNamespace = "YOURSERVICEBUS-ns";
+            localSettings.ServicebusNamespace = "iotbuildlab-ns";
             localSettings.EventHubName = "ehdevices";
             localSettings.KeyName = "D1";
-            localSettings.Key = "YOUR_KEY";
-            localSettings.DisplayName = "YOUR_DEVICE_NAME";
-            localSettings.Organization = "YOUR_ORGANIZATION_OR_SELF";
-            localSettings.Location = "YOUR_LOCATION";
+            localSettings.Key = "iQFNbyWTYRBwypMtPmpfJVz+NBgR32YHrQC0ZSvId20=";
+            localSettings.DisplayName = "WeatherStation1"; //TODO: Replace "WeatherStation1" with a unique name for viewing in Connect The Dots
+            localSettings.Organization = "IoT Build Lab";
+            localSettings.Location = "USA";
 
             SaveSettings();
 
@@ -164,13 +167,7 @@ namespace build2015_weather_station_task
             }
 
             // Sending the temperature data
-            sensor = sensors.Find(item => item.measurename == "Temperature");
-            if (sensor != null)
-            {
-                sensor.value = weatherData.CelsiusTemperature;
-                sensor.timecreated = time;
-                sendMessage(sensor.ToJson());
-            }
+            //TODO: Add your code here. [HINT: Send the "Temperature" data from the weatherData]
         }
 
         async private void WriteDataToIsolatedStorage()

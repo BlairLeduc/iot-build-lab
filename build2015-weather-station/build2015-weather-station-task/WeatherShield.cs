@@ -11,8 +11,8 @@ namespace build2015_weather_station_task
         public sealed class WeatherShield
         {
             // LED Control Pins
-            private const int STATUS_LED_BLUE_PIN = 6;
-            private const int STATUS_LED_GREEN_PIN = 5;
+            private const int STATUS_LED_BLUE_PIN = 2;
+            private const int STATUS_LED_GREEN_PIN = 1;
 
             // I2C Addresses
             private const ushort HTDU21D_I2C_ADDRESS = 0x0040;
@@ -97,7 +97,7 @@ namespace build2015_weather_station_task
                  * Use the Windows.Devices.Enumeration.DeviceInformation class to create a collection using the advanced query syntax string
                  * Take the device id of the first device in the collection
                  */
-                string advanced_query_syntax = I2cDevice.GetDeviceSelector("I2C1");
+                string advanced_query_syntax = I2cDevice.GetDeviceSelector("I2C5");
                 DeviceInformationCollection device_information_collection = await DeviceInformation.FindAllAsync(advanced_query_syntax);
                 string deviceId = device_information_collection[0].Id;
 

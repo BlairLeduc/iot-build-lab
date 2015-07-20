@@ -45,13 +45,13 @@ namespace build2015_weather_station_task
             mutex = new Mutex(false, mutexId);
 
             // Initialize ConnectTheDots Settings
-            localSettings.ServicebusNamespace = "iotbuildlab-ns";
+            localSettings.ServicebusNamespace = "iotOSCONlab-ns";
             localSettings.EventHubName = "ehdevices";
             localSettings.KeyName = "D1";
-            localSettings.Key = "iQFNbyWTYRBwypMtPmpfJVz+NBgR32YHrQC0ZSvId20=";
+            localSettings.Key = "y3gtCVxZ2XnrMBQ7uEBARN7NUJhyDQBsyaXGzrBSh5M=";
             localSettings.DisplayName = "WeatherStation1"; //TODO: Replace "WeatherStation1" with a unique name for viewing in Connect The Dots
-            localSettings.Organization = "IoT Build Lab";
-            localSettings.Location = "USA";
+            localSettings.Organization = "IoT OSCON Lab";
+            localSettings.Location = "Portland";
 
             SaveSettings();
 

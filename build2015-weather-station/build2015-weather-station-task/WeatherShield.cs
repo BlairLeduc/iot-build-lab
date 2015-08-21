@@ -74,7 +74,9 @@ namespace build2015_weather_station_task
                  * Write the GPIO pin value of low on the pin
                  * Set the GPIO pin drive mode to output
                  */
-                //TODO: Add your code here. [HINT: see GreenLEDPin]
+                BlueLEDPin = gpio.OpenPin(STATUS_LED_BLUE_PIN, GpioSharingMode.Exclusive);
+                BlueLEDPin.Write(GpioPinValue.Low);
+                BlueLEDPin.SetDriveMode(GpioPinDriveMode.Output);
 
                 /*
                  * Initialize the green LED and set to "off"
@@ -123,7 +125,11 @@ namespace build2015_weather_station_task
                  *
                  * Instantiate the the MPL3115A2 I2C device using the device id and the I2cConnectionSettings
                  */
-                //TODO: Add your code here. [HINT: see htdu21d]
+                I2cConnectionSettings mpl3115a2_connection = new I2cConnectionSettings(MPL3115A2_I2C_ADDRESS);
+                htdu21d_connection.BusSpeed = I2cBusSpeed.FastMode;
+                htdu21d_connection.SharingMode = I2cSharingMode.Shared;
+
+                mpl3115a2 = await I2cDevice.FromIdAsync(deviceId, mpl3115a2_connection);
             }
 
             /// <summary>
@@ -217,7 +223,7 @@ namespace build2015_weather_station_task
                      *
                      * NOTE: Holding the line allows for a `WriteRead` style transaction
                      */
-                    //TODO: Add your code here. [HINT: uses same I2CDevice (htdu21d) as RawTemperature)]
+                    htdu21d.WriteRead(new byte[] { SAMPLE_HUMIDITY_HOLD }, i2c_humidity_data);
 
                     /*
                      * Reconstruct the result using the first two bytes returned from the device
@@ -228,8 +234,8 @@ namespace build2015_weather_station_task
                      * -- off = temperature data
                      * -- on = humdity data
                      */
-                    //TODO: Add your code here. [HINT: uses same I2CDevice (htdu21d) as RawTemperature)]
-
+                    humidity = (ushort)(i2c_humidity_data[0] << 8);
+                    humidity |= (ushort)(i2c_humidity_data[1] & 0xFC);
                     /*
                      * Test the integrity of the data
                      *
@@ -238,7 +244,11 @@ namespace build2015_weather_station_task
                      *
                      * WARNING: HTDU21D firmware error - XOR CRC byte with 0x62 before attempting to validate
                      */
-                    //TODO: Add your code here. [HINT: uses same I2CDevice (htdu21d) as RawTemperature)]
+                    bool humidity_data = (0x02 == (0x02 & i2c_humidity_data[1]));
+                    if (!humidity_data) { return 0; }
+
+                    bool valid_data = ValidHtdu21dCyclicRedundancyCheck((ushort)(humidity | 0x02), i2c_humidity_data[2]);
+                    if (!valid_data) { return 0; }
 
                     return humidity;
                 }
